@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            User.hasOne(models.DetailUser, { foreignKey: 'userId' });
+            User.belongsTo(models.Group, { foreignKey: 'groupId' });
+            User.belongsTo(models.Class, { foreignKey: 'classId' });
+            User.belongsToMany(models.Project, { through: 'Project-User' });
         }
     };
     User.init({
