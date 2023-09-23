@@ -1,7 +1,9 @@
+require("dotenv").config;
 import { reject } from "lodash";
 import db from "../models/index";
 import bcrypt from "bcrypt";
 const salt = bcrypt.genSaltSync(10);
+import { signToken, verifyToken, getRoleOfGroup } from "./jwtService";
 
 let hashPassword = (password) => {
   const hash = bcrypt.hashSync(password, salt);
@@ -120,6 +122,7 @@ let handleLogin = (data) => {
         resolve({
           code: 1,
           message: "Missing required parameters",
+          payload: payload,
         });
         return;
       }
@@ -135,6 +138,7 @@ let handleLogin = (data) => {
       let user = await db.User.findOne({
         where: { email: data.email },
       });
+
       let isTruePassword = validatePassword(data.password, user.password);
       if (!isTruePassword) {
         resolve({
@@ -143,9 +147,14 @@ let handleLogin = (data) => {
         });
         return;
       }
+
+      let payload = await getRoleOfGroup(data.email);
+      let token = signToken(payload);
+
       resolve({
         code: 0,
         message: "OK",
+        token: token,
       });
       return;
     } catch (e) {
