@@ -122,7 +122,6 @@ let handleLogin = (data) => {
         resolve({
           code: 1,
           message: "Missing required parameters",
-          payload: payload,
         });
         return;
       }
@@ -138,6 +137,13 @@ let handleLogin = (data) => {
       let user = await db.User.findOne({
         where: { email: data.email },
       });
+      if (!user) {
+        resolve({
+          code: 4,
+          message: "This email not found, please login other email",
+        });
+        return;
+      }
 
       let isTruePassword = validatePassword(data.password, user.password);
       if (!isTruePassword) {
@@ -155,6 +161,7 @@ let handleLogin = (data) => {
         code: 0,
         message: "OK",
         token: token,
+        user: payload,
       });
       return;
     } catch (e) {

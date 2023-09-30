@@ -30,7 +30,7 @@ let handleLogin = async (req, res) => {
       password: req.body.password,
     };
     let response = await apiService.handleLogin(data);
-    if (response && response.code === 0) {
+    if (response && response.code === 0 && response.token) {
       res.cookie("jwt", response.token, {
         maxAge: 30 * 60 * 1000,
         httpOnly: true,
@@ -46,7 +46,24 @@ let handleLogin = async (req, res) => {
   }
 };
 
+let handleLogout = async (req, res) => {
+  try {
+    res.clearCookie("jwt");
+    // Bug, why can't clear cookie
+    return res.status(200).json({
+      code: 0,
+      message: "Logout success ...",
+    });
+  } catch (e) {
+    console.log("happen error", e);
+    return res.status(200).json({
+      code: -1,
+      massage: "Error from server",
+    });
+  }
+};
 module.exports = {
   handleRegister,
   handleLogin,
+  handleLogout,
 };

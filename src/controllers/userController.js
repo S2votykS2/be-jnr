@@ -59,8 +59,7 @@ let updateUser = async (req, res) => {
       phoneNumber: req.body.phoneNumber,
       gender: req.body.gender,
       address: req.body.address,
-      groupName: req.body.groupName,
-      groupDescription: req.body.groupDescription,
+      groupId: req.body.groupId,
     };
     let response = await userService.updateUser(data);
     return res.status(200).json(response);

@@ -2,6 +2,8 @@ import { signToken, verifyToken, getRoleOfGroup } from "../services/jwtService";
 const getUserFromCookie = async (req, res, next) => {
   try {
     let cookies = req.cookies;
+    console.log("check cookies = ", cookies);
+    console.log("check cookies.jwt = ", cookies.jwt);
     if (cookies && cookies.jwt) {
       let data = verifyToken(cookies.jwt);
       if (data) {
@@ -27,7 +29,9 @@ const getUserFromCookie = async (req, res, next) => {
 const checkAuthenticatedUser = async (req, res, next) => {
   try {
     let roles = req.user.group;
+    console.log("check roles", roles);
     let currentPath = req.path;
+    console.log("check path", currentPath);
     if (roles && roles.length > 0) {
       let isAccess = roles.some((item, index) => {
         return item.Roles.url === currentPath;
@@ -35,13 +39,13 @@ const checkAuthenticatedUser = async (req, res, next) => {
       if (isAccess) {
         next();
       } else {
-        return res.status(403).json({
+        return res.status(200).json({
           code: -1,
           message: "You do not permission to access the resource",
         });
       }
     } else {
-      return res.status(403).json({
+      return res.status(200).json({
         code: -1,
         message: "You do not permission to access the resource",
       });

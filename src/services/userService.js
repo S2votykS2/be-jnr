@@ -225,8 +225,7 @@ let updateUser = (data) =>
           phoneNumber: data.phoneNumber,
           gender: data.gender,
           address: data.address,
-          // groupName: req.body.groupName,
-          // groupDescription: req.body.groupDescription,
+          groupId: data.groupId,
         },
         {
           where: {
@@ -280,6 +279,7 @@ let getAllGroup = () =>
       reject(e);
     }
   });
+
 module.exports = {
   createUser,
   displayUser,
